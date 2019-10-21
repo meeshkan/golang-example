@@ -13,8 +13,10 @@ jobs:
       - image: circleci/golang:1.12 #
     steps:
       - checkout
+      - unmock/start
       - run:
           command: go test
+      - unmock/stop
 
 workflows:
   version: 2
