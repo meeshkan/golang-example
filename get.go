@@ -5,13 +5,14 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 func makeGetCall() (string, error) {
 
 	client := &http.Client{}
 
-	token := "fake"
+	token := os.Getenv("GITHUB_TOKEN")
 
 	req, err := http.NewRequest("GET", "https://api.github.com/user/repos", nil)
 	req.Header.Add("Accept", "application/vnd.github.v3+json")
@@ -24,8 +25,8 @@ func makeGetCall() (string, error) {
 
 	defer resp.Body.Close()
 
-	if resp.Status != "200" {
-		return "", fmt.Errorf("Invalid status %s", resp.Status)
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("Invalid status %d", resp.StatusCode)
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
