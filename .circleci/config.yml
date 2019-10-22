@@ -11,6 +11,15 @@ jobs:
       - image: circleci/golang:1.12
     steps:
       - checkout
+      - restore_cache: # restores saved cache if no changes are detected since last run
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          keys:
+            - v1-pkg-cache
+      - run: go get github.com/joho/godotenv
+      - save_cache: # Store cache in the /go/pkg directory
+          key: v1-pkg-cache
+          paths:
+            - "/go/pkg"
       - unmock/start:
           domains: "api.github.com"
       - run:
