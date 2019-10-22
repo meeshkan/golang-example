@@ -24,9 +24,8 @@ jobs:
             - "/go/pkg"
       - unmock/start:
           domains: "api.github.com"
-      - run:
-          name: "Set Unmock state"
-          command: curl -X POST -d "{}" http://localhost:8000/api?code=200
+      - unmock/set_code:
+          code: 200
       - run:
           command: go test
           environment:
