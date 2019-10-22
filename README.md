@@ -2,14 +2,6 @@
 
 ## Instructions
 
-### Adding dependencies
-
-```bash
-go get github.com/joho/godotenv
-// or
-make deps
-```
-
 ### Creating a build
 
 ```bash
