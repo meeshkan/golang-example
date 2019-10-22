@@ -11,20 +11,26 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// Repository is a GitHub repository
+type Repository struct {
+	Name  string `json:"name"`
+	Stars int    `json:"stargazers_count"`
+}
+
 func init() {
 	if err := godotenv.Load(); err != nil {
 		// Ignore
 	}
 }
 
-func parseResponse(body []byte) ([]interface{}, error) {
-	var parsed []interface{}
+func parseResponse(body []byte) ([]Repository, error) {
+	var parsed []Repository
 	err := json.Unmarshal([]byte(body), &parsed)
 
 	return parsed, err
 }
 
-func getGitHubRepositories() ([]interface{}, error) {
+func getGitHubRepositories() ([]Repository, error) {
 
 	client := &http.Client{}
 
@@ -66,8 +72,8 @@ func main() {
 
 	stars := 0
 	for _, repository := range repositories {
-		repo := repository.(map[string]interface{})
-		stars += int(repo["stargazers_count"].(float64))
+		repo := repository
+		stars += repo.Stars
 	}
 
 	log.Printf("You have %d repositories and %d stars", len(repositories), stars)
