@@ -28,6 +28,7 @@ jobs:
           command: go test
           environment:
             GITHUB_TOKEN: fake-token
+            NO_PROXY: gopkg.in
       - unmock/stop
 
 workflows:
