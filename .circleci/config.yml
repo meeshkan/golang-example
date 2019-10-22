@@ -24,7 +24,7 @@ jobs:
             - "/go/pkg"
       - unmock/start:
           domains: "api.github.com"
-      - unmock/set_code:
+      - unmock/set:
           code: 200
       - run:
           command: go test
