@@ -6,13 +6,26 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/joho/godotenv"
 )
+
+func init() {
+	// loads values from .env into the system
+	if err := godotenv.Load(); err != nil {
+		log.Print("No .env file found")
+	}
+}
 
 func makeGetCall() (string, error) {
 
 	client := &http.Client{}
 
-	token := os.Getenv("GITHUB_TOKEN")
+	token, exists := os.LookupEnv("GITHUB_TOKEN")
+
+	if !exists {
+		log.Fatalln("Environment variable GITHUB_TOKEN not set")
+	}
 
 	req, err := http.NewRequest("GET", "https://api.github.com/user/repos", nil)
 	req.Header.Add("Accept", "application/vnd.github.v3+json")
