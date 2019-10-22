@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -11,13 +12,19 @@ import (
 )
 
 func init() {
-	// loads values from .env into the system
 	if err := godotenv.Load(); err != nil {
-		log.Print("No .env file found")
+		// Ignore
 	}
 }
 
-func makeGetCall() (string, error) {
+func parseResponse(body []byte) ([]interface{}, error) {
+	var parsed []interface{}
+	err := json.Unmarshal([]byte(body), &parsed)
+
+	return parsed, err
+}
+
+func getGitHubRepositories() ([]interface{}, error) {
 
 	client := &http.Client{}
 
@@ -30,26 +37,36 @@ func makeGetCall() (string, error) {
 	req, err := http.NewRequest("GET", "https://api.github.com/user/repos", nil)
 	req.Header.Add("Accept", "application/vnd.github.v3+json")
 	req.Header.Add("Authorization", fmt.Sprintf("token %s", token))
+
 	resp, err := client.Do(req)
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("Invalid status %d", resp.StatusCode)
+		return nil, fmt.Errorf("Invalid status %d", resp.StatusCode)
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	log.Println(string(body))
-	return string(body), nil
+
+	return parseResponse(body)
 }
 
 func main() {
-	makeGetCall()
+	repositories, err := getGitHubRepositories()
+	if err != nil {
+		log.Fatalln("Failed fetching repositories")
+	}
+
+	log.Printf("You have %d repositories", len(repositories))
+
+	// reposString, err := json.Marshal(repositories)
+
+	// log.Println(string(reposString))
 }
