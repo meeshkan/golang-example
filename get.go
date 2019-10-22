@@ -11,20 +11,27 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// Repository is created from a GitHub repository object.
+// See the documentation at https://developer.github.com/v3/repos/
+type Repository struct {
+	Name  string `json:"name"`
+	Stars int    `json:"stargazers_count"`
+}
+
 func init() {
 	if err := godotenv.Load(); err != nil {
 		// Ignore
 	}
 }
 
-func parseResponse(body []byte) ([]interface{}, error) {
-	var parsed []interface{}
+func parseRepositories(body []byte) ([]Repository, error) {
+	var parsed []Repository
 	err := json.Unmarshal([]byte(body), &parsed)
 
 	return parsed, err
 }
 
-func getGitHubRepositories() ([]interface{}, error) {
+func getGitHubRepositories() ([]Repository, error) {
 
 	client := &http.Client{}
 
@@ -46,6 +53,10 @@ func getGitHubRepositories() ([]interface{}, error) {
 
 	defer resp.Body.Close()
 
+	// TODO Pagination
+	// link := resp.Header.Get("Link")
+	// log.Println(link)
+
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("Invalid status %d", resp.StatusCode)
 	}
@@ -55,7 +66,15 @@ func getGitHubRepositories() ([]interface{}, error) {
 		return nil, err
 	}
 
-	return parseResponse(body)
+	return parseRepositories(body)
+}
+
+func computeStars(repositories []Repository) int {
+	totalStars := 0
+	for _, repository := range repositories {
+		totalStars += repository.Stars
+	}
+	return totalStars
 }
 
 func main() {
@@ -64,9 +83,10 @@ func main() {
 		log.Fatalln("Failed fetching repositories")
 	}
 
-	log.Printf("You have %d repositories", len(repositories))
+	totalStars := computeStars(repositories)
+
+	log.Printf("You have %d repositories and %d stars", len(repositories), totalStars)
 
 	// reposString, err := json.Marshal(repositories)
-
 	// log.Println(string(reposString))
 }
