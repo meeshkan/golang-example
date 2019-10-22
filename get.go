@@ -69,19 +69,23 @@ func getGitHubRepositories() ([]Repository, error) {
 	return parseRepositories(body)
 }
 
+func computeStars(repositories []Repository) int {
+	totalStars := 0
+	for _, repository := range repositories {
+		totalStars += repository.Stars
+	}
+	return totalStars
+}
+
 func main() {
 	repositories, err := getGitHubRepositories()
 	if err != nil {
 		log.Fatalln("Failed fetching repositories")
 	}
 
-	stars := 0
-	for _, repository := range repositories {
-		repo := repository
-		stars += repo.Stars
-	}
+	totalStars := computeStars(repositories)
 
-	log.Printf("You have %d repositories and %d stars", len(repositories), stars)
+	log.Printf("You have %d repositories and %d stars", len(repositories), totalStars)
 
 	// reposString, err := json.Marshal(repositories)
 	// log.Println(string(reposString))
