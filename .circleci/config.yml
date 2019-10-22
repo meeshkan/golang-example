@@ -1,7 +1,5 @@
 # Javascript Node CircleCI 2.0 configuration file
 #
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2.1
 orbs:
   unmock: unmock/unmock@dev:0.0.14
@@ -10,11 +8,29 @@ jobs:
   build:
     working_directory: ~/repo
     docker:
-      - image: circleci/golang:1.12 #
+      - image: circleci/golang:1.12
     steps:
       - checkout
+      - restore_cache: # restores saved cache if no changes are detected since last run
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          keys:
+            - v1-pkg-cache
+      - run:
+          name: Fetch dependencies
+          command: go get github.com/joho/godotenv
+      - save_cache: # Store cache in the /go/pkg directory
+          key: v1-pkg-cache
+          paths:
+            - "/go/pkg"
+      - unmock/start:
+          domains: "api.github.com"
+      - unmock/set:
+          code: 200
       - run:
           command: go test
+          environment:
+            GITHUB_TOKEN: fake-token
+      - unmock/stop
 
 workflows:
   version: 2
