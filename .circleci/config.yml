@@ -12,9 +12,11 @@ jobs:
     steps:
       - checkout
       - unmock/start:
-          domains: "httpbin.org"
+          domains: "api.github.com"
       - run:
           command: go test
+          environment:
+            GITHUB_TOKEN: fake-token
       - unmock/stop
 
 workflows:
