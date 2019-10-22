@@ -64,7 +64,13 @@ func main() {
 		log.Fatalln("Failed fetching repositories")
 	}
 
-	log.Printf("You have %d repositories", len(repositories))
+	stars := 0
+	for _, repository := range repositories {
+		repo := repository.(map[string]interface{})
+		stars += int(repo["stargazers_count"].(float64))
+	}
+
+	log.Printf("You have %d repositories and %d stars", len(repositories), stars)
 
 	// reposString, err := json.Marshal(repositories)
 

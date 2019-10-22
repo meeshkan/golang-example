@@ -1,11 +1,10 @@
 # Go parameters
 GOCMD=go
 GOBUILD=$(GOCMD) build
+GORUN=$(GOCMD) run
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
-GOGET=$(GOCMD) get
 BINARY_NAME=example-golang
-BINARY_UNIX=$(BINARY_NAME)_unix
 
 all: test build
 build:
@@ -15,9 +14,5 @@ test:
 clean:
 		$(GOCLEAN)
 		rm -f $(BINARY_NAME)
-		rm -f $(BINARY_UNIX)
 run:
-		$(GOBUILD) -o $(BINARY_NAME) -v ./...
-		./$(BINARY_NAME)
-deps:
-		$(GOGET) github.com/joho/godotenv
+		$(GORUN) ./...
