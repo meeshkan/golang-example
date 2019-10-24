@@ -18146,6 +18146,7 @@ paths:
               schema:
                 type: integer
 servers:
+  - url: http://api.github.com/
   - url: https://api.github.com/
 components:
   requestBodies:
