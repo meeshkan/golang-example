@@ -1,6 +1,6 @@
 # Example of using Unmock server for testing HTTP traffic in Go
 
-## Instructions
+## Usage
 
 ### Creating a build
 
