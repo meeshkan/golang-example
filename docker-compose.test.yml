@@ -14,6 +14,8 @@ services:
     networks:
       - integration-tests-network
     container_name: example-golang-tests
+    volumes:
+      - $PWD/certs:/app/certs
   unmock:
     image: unmock/unmock-server:latest
     container_name: "unmock-server"
