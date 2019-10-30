@@ -20,6 +20,9 @@ jobs:
             - "/go/pkg"
       - setup_remote_docker
       - run:
+          name: "Prepare certs"
+          command: docker run -v `pwd`/certs:/app/certs unmock/unmock-server bash build-cert.sh api.github.com certs/
+      - run:
           name: "Run tests"
           command: docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit
       - run:

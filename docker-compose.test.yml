@@ -1,7 +1,7 @@
 version: "3"
 
 networks:
-  example-test:
+  integration-tests-network:
     driver: bridge
 
 services:
@@ -12,7 +12,7 @@ services:
     depends_on:
       - unmock
     networks:
-      - example-test
+      - integration-tests-network
     container_name: example-golang-tests
   unmock:
     image: unmock/unmock-server:latest
@@ -25,8 +25,7 @@ services:
       - "8008:8008"
       - "8443:8443"
     networks:
-      - example-test
+      - integration-tests-network
     volumes:
       - $PWD/__unmock__:/app/__unmock__
       - $PWD/certs:/app/certs
-    # command: stuff
