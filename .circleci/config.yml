@@ -18,9 +18,26 @@ jobs:
           key: v1-pkg-cache
           paths:
             - "/go/pkg"
+      - unmock/start:
+          domains: "api.github.com"
+      - unmock/set:
+          code: 200
+      - run:
+          command: go test
+          environment:
+            GITHUB_TOKEN: fake-token
+            NO_PROXY: gopkg.in
+      - unmock/stop
+
+  build-with-docker:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
       - setup_remote_docker
       - run:
-          name: "Prepare certs"
+          name: "Prepare certificate in certs/ folder"
           command: docker run -v `pwd`/certs:/app/certs unmock/unmock-server bash build-cert.sh api.github.com certs/
       - run:
           name: "Run tests"
@@ -34,3 +51,4 @@ workflows:
   test-and-build:
     jobs:
       - build
+      - build-with-docker
