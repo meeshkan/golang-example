@@ -9,7 +9,7 @@ services:
       - unmock
     container_name: example-golang-tests
     volumes:
-      - $PWD/certs:/app/certs
+      - certs:/app/certs
     environment:
       - GITHUB_TOKEN=fake-token
       - https_proxy=http://unmock-server:8008
@@ -25,7 +25,7 @@ services:
       - "8008:8008"
       - "8443:8443"
     volumes:
-      # This does not work in CircleCI
+      # This does not work in CircleCI unless running in "machine" executor:
       # https://discuss.circleci.com/t/docker-compose-yml-and-volume-mounts/10043/7
       - __unmock__:/app/__unmock__
       - certs:/app/certs
