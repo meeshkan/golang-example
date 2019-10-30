@@ -31,11 +31,11 @@ jobs:
 
   build-with-docker:
     working_directory: ~/repo
-    docker:
-      - image: circleci/golang:1.12
+    machine:
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - setup_remote_docker
+      # - setup_remote_docker  # Not needed for "machine" executor
       - run:
           name: "Prepare certificate in certs/ folder"
           command: docker run -v `pwd`/certs:/app/certs unmock/unmock-server bash build-cert.sh api.github.com certs/
