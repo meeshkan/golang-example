@@ -25,5 +25,7 @@ services:
       - "8008:8008"
       - "8443:8443"
     volumes:
+      # This does not work in CircleCI
+      # https://discuss.circleci.com/t/docker-compose-yml-and-volume-mounts/10043/7
       - $PWD/__unmock__:/app/__unmock__
       - $PWD/certs:/app/certs
