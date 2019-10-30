@@ -16,6 +16,10 @@ services:
     container_name: example-golang-tests
     volumes:
       - $PWD/certs:/app/certs
+    environment:
+      - GITHUB_TOKEN=fake-token
+      - https_proxy=http://unmock-server:8008
+      - SSL_CERT_FILE=certs/cert.pem
   unmock:
     image: unmock/unmock-server:latest
     container_name: "unmock-server"

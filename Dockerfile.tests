@@ -13,9 +13,4 @@ RUN set -ex; \
 
 RUN go mod download
 
-ENV GITHUB_TOKEN fake-token
-ENV https_proxy http://unmock-server:8008
-ENV NO_PROXY gopkg.in
-ENV SSL_CERT_FILE certs/cert.pem
-
 CMD CGO_ENABLED=0 go test ./...
