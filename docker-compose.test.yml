@@ -1,0 +1,32 @@
+version: "3"
+
+networks:
+  example-test:
+    driver: bridge
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile.tests
+    depends_on:
+      - unmock
+    networks:
+      - example-test
+    container_name: example-golang-tests
+  unmock:
+    image: unmock/unmock-server:latest
+    container_name: "unmock-server"
+    environment:
+      - PUBLIC_KEY_PATH=/app/certs/cert.pem
+      - PRIVATE_KEY_PATH=/app/certs/key.pem
+    ports:
+      - "8000:8000"
+      - "8008:8008"
+      - "8443:8443"
+    networks:
+      - example-test
+    volumes:
+      - $PWD/__unmock__:/app/__unmock__
+      - $PWD/certs:/app/certs
+    # command: stuff

@@ -18,16 +18,12 @@ jobs:
           key: v1-pkg-cache
           paths:
             - "/go/pkg"
-      - unmock/start-docker:
-          domains: "api.github.com"
-      - unmock/set:
-          code: 200
       - run:
-          command: go test
-          environment:
-            GITHUB_TOKEN: fake-token
-            NO_PROXY: gopkg.in
-      - unmock/stop-docker
+          name: "Run tests"
+          command: docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit
+      - run:
+          name: "Stop containers"
+          command: docker-compose down
 
 workflows:
   version: 2
