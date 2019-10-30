@@ -1,9 +1,5 @@
 version: "3"
 
-networks:
-  integration-tests-network:
-    driver: bridge
-
 services:
   app:
     build:
@@ -11,8 +7,6 @@ services:
       dockerfile: Dockerfile.tests
     depends_on:
       - unmock
-    networks:
-      - integration-tests-network
     container_name: example-golang-tests
     volumes:
       - $PWD/certs:/app/certs
@@ -30,8 +24,6 @@ services:
       - "8000:8000"
       - "8008:8008"
       - "8443:8443"
-    networks:
-      - integration-tests-network
     volumes:
       - $PWD/__unmock__:/app/__unmock__
       - $PWD/certs:/app/certs
