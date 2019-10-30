@@ -11,4 +11,10 @@ RUN set -ex; \
     apk update; \
     apk add --no-cache git
 
+RUN go mod download
+
+ENV GITHUB_TOKEN fake-token
+ENV https_proxy http://unmock-server:8008
+ENV NO_PROXY gopkg.in
+
 CMD CGO_ENABLED=0 go test ./...
