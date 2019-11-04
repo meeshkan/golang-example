@@ -11,6 +11,11 @@ RUN set -ex; \
     apk update; \
     apk add --no-cache git
 
+
 RUN go mod download
+
+# Trust Unmock certificate
+RUN wget https://raw.githubusercontent.com/unmock/unmock-js/dev/packages/unmock-server/certs/ca.pem
+ENV SSL_CERT_FILE ca.pem
 
 CMD CGO_ENABLED=0 go test ./...

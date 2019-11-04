@@ -8,18 +8,12 @@ services:
     depends_on:
       - unmock
     container_name: example-golang-tests
-    volumes:
-      - ./certs:/app/certs
     environment:
       - GITHUB_TOKEN=fake-token
       - https_proxy=http://unmock-server:8008
-      - SSL_CERT_FILE=certs/cert.pem
   unmock:
     image: unmock/unmock-server:latest
     container_name: "unmock-server"
-    environment:
-      - PUBLIC_KEY_PATH=/app/certs/cert.pem
-      - PRIVATE_KEY_PATH=/app/certs/key.pem
     ports:
       - "8000:8000"
       - "8008:8008"
@@ -28,4 +22,3 @@ services:
       # This does not work in CircleCI unless running in "machine" executor:
       # https://discuss.circleci.com/t/docker-compose-yml-and-volume-mounts/10043/7
       - ./__unmock__:/app/__unmock__
-      - ./certs:/app/certs
