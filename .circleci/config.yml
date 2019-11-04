@@ -29,8 +29,8 @@ jobs:
       - unmock/stop
   use-docker:
     working_directory: ~/repo
-    docker:
-      - image: circleci/golang:1.12
+    machine:
+      image: ubuntu-1604:201903-01 # pins image to specific version
     steps:
       - checkout
       - restore_cache: # restores saved cache if no changes are detected since last run
