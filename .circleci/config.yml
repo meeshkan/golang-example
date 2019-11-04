@@ -18,8 +18,7 @@ jobs:
           key: v1-pkg-cache
           paths:
             - "/go/pkg"
-      - unmock/start:
-          domains: "api.github.com"
+      - unmock/start
       - unmock/set:
           code: 200
       - run:
