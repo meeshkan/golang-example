@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   unmock: unmock/unmock@volatile
+  go: circleci/go@0.2.0
 
 jobs:
   build:
@@ -13,6 +14,7 @@ jobs:
           # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
           keys:
             - v1-pkg-cache
+      - go/install
       - run: go mod download
       - save_cache: # Store cache in the /go/pkg directory
           key: v1-pkg-cache
@@ -39,7 +41,10 @@ jobs:
       #       - v1-pkg-cache
       - run:
           name: "Install go"
-          command: sudo apt-get update && sudo apt-get install golang-go
+          command: |
+            sudo apt-get remove go
+            wget https://dl.google.com/go/go1.13.4.linux-amd64.tar.gz
+            sudo tar -C /usr/local -xzf
       - run: go mod download
       # - save_cache: # Store cache in the /go/pkg directory
       #     key: v1-pkg-cache
