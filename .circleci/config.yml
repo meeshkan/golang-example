@@ -33,15 +33,15 @@ jobs:
       image: ubuntu-1604:201903-01 # pins image to specific version
     steps:
       - checkout
-      - restore_cache: # restores saved cache if no changes are detected since last run
-          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          keys:
-            - v1-pkg-cache
+      # - restore_cache: # restores saved cache if no changes are detected since last run
+      #     # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+      #     keys:
+      #       - v1-pkg-cache
       - run: go mod download
-      - save_cache: # Store cache in the /go/pkg directory
-          key: v1-pkg-cache
-          paths:
-            - "/go/pkg"
+      # - save_cache: # Store cache in the /go/pkg directory
+      #     key: v1-pkg-cache
+      #     paths:
+      #       - ~/repo/pkg
       - unmock/start-docker
       - unmock/set:
           code: 200
