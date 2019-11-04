@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  unmock: unmock/unmock@dev:0.0.14
+  unmock: unmock/unmock@volatile
 
 jobs:
   build:
@@ -35,10 +35,6 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-      # - setup_remote_docker  # Not needed for "machine" executor
-      - run:
-          name: "Prepare certificate in certs/ folder"
-          command: docker run -v `pwd`/certs:/app/certs unmock/unmock-server bash build-cert.sh api.github.com certs/
       - run:
           name: "Run tests"
           command: sudo docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit
