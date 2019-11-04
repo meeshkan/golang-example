@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  unmock: unmock/unmock@dev:0.0.14
+  unmock: unmock/unmock@volatile
 
 jobs:
   build:
