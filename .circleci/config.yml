@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   unmock: unmock/unmock@volatile
+  go: circleci/go@0.2.0
 
 jobs:
   build:
@@ -27,9 +28,35 @@ jobs:
             GITHUB_TOKEN: fake-token
             NO_PROXY: gopkg.in
       - unmock/stop
+  use-docker:
+    working_directory: ~/repo
+    machine:
+      image: ubuntu-1604:201903-01 # pins image to specific version
+    steps:
+      - checkout
+      # - restore_cache: # restores saved cache if no changes are detected since last run
+      #     # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+      #     keys:
+      #       - v1-pkg-cache
+      - go/install
+      - run: go mod download
+      # - save_cache: # Store cache in the /go/pkg directory
+      #     key: v1-pkg-cache
+      #     paths:
+      #       - ~/repo/pkg
+      - unmock/start-docker
+      - unmock/set:
+          code: 200
+      - run:
+          command: go test
+          environment:
+            GITHUB_TOKEN: fake-token
+            NO_PROXY: gopkg.in
+      - unmock/stop-docker
 
 workflows:
   version: 2
   test-and-build:
     jobs:
       - build
+      - use-docker
