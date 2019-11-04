@@ -1,4 +1,4 @@
-# Example of using Unmock server for testing HTTP(S) traffic in Go
+# Example of using Unmock server for testing HTTP traffic in Go
 
 ## Instructions
 
