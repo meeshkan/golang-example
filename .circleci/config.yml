@@ -28,8 +28,22 @@ jobs:
             NO_PROXY: gopkg.in
       - unmock/stop
 
+  build-with-docker:
+    working_directory: ~/repo
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: "Run tests"
+          command: sudo docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit
+      # - run:
+      #     name: "Stop containers"
+      #     command: docker-compose down -f docker-compose.test.yml
+
 workflows:
   version: 2
   test-and-build:
     jobs:
       - build
+      - build-with-docker

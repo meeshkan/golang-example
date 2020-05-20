@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile.tests
+    depends_on:
+      - unmock
+    container_name: example-golang-tests
+    environment:
+      - GITHUB_TOKEN=fake-token
+      - https_proxy=http://unmock-server:8008
+  unmock:
+    image: unmock/unmock-server:latest
+    container_name: "unmock-server"
+    ports:
+      - "8000:8000"
+      - "8008:8008"
+      - "8443:8443"
+    volumes:
+      # This does not work in CircleCI unless running in "machine" executor:
+      # https://discuss.circleci.com/t/docker-compose-yml-and-volume-mounts/10043/7
+      - ./__unmock__:/app/__unmock__
